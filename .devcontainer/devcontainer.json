@@ -6,7 +6,7 @@
 		"terminal.integrated.shell.linux": "/bin/bash"
 
 	},
-	"appPort": 9100,
+	"appPort": "9100:9100",
 	"extensions": [
 		"ms-python.python"
 	]
