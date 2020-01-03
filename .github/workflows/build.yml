@@ -11,8 +11,8 @@ jobs:
           python-version: '3.x'
           architecture: x64
       - name: Publish package
-      if: github.event_name == 'push'
-      uses: pypa/gh-action-pypi-publish@master
-      with:
-        user: __token__
-        password: ${{ secrets.pypi_password }}
+        if: github.event_name == 'push'
+        uses: pypa/gh-action-pypi-publish@master
+        with:
+          user: __token__
+          password: ${{ secrets.pypi_password }}
