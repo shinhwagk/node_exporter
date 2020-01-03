@@ -1,4 +1,4 @@
-name: Test filebeat-oracle
+name: Build node_exporter
 on: [push]
 
 jobs:
