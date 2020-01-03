@@ -23,14 +23,20 @@ class NodeExporterServer(BaseHTTPRequestHandler):
                 m.collect()
             self.wfile.write(generate_latest())
         else:
-            self.wfile.write("1111".encode('utf-8'))
+            self.wfile.write("""<html>
+			<head><title>Node Exporter</title></head>
+			<body>
+			<h1>Node Exporter</h1>
+			<p><a href="/metrics">Metrics</a></p>
+			</body>
+			</html>""".encode('utf-8'))
 
 
-def run(server_class=HTTPServer, handler_class=NodeExporterServer, port=8080):
+def run(server_class=HTTPServer, handler_class=NodeExporterServer, port=9100):
     logging.basicConfig(level=logging.INFO)
     server_address = ('', port)
     httpd = server_class(server_address, handler_class)
-    logging.info('Starting httpd...\n')
+    logging.info('Starting node_exporter port{}...\n'.format(port))
     try:
         httpd.serve_forever()
     except KeyboardInterrupt:
