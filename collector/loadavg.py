@@ -1,15 +1,6 @@
-from http.server import BaseHTTPRequestHandler, HTTPServer
-import logging
-import re
-import os
-
-from prometheus_client import Counter, Gauge, generate_latest, Metric
-from prometheus_client.core import REGISTRY
-
-from collector.diskstats import DiskstatsCollector
+from prometheus_client import Gauge
 
 from collector.namespace import NAMESPACE
-
 
 
 class LoadavgCollector():

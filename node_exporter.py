@@ -1,9 +1,8 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import logging
-import re
 import os
 
-from prometheus_client import Counter, Gauge, generate_latest
+from prometheus_client import generate_latest
 from prometheus_client.core import REGISTRY
 
 from collector.diskstats import DiskstatsCollector

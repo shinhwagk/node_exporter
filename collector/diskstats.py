@@ -1,6 +1,6 @@
 import re
 
-from prometheus_client.core import CounterMetricFamily, REGISTRY
+from prometheus_client.core import CounterMetricFamily
 
 from collector.namespace import NAMESPACE
 
@@ -34,7 +34,7 @@ def collect():
           CounterMetricFamily('{}_{}_io_time_weighted_seconds_total'.format(NAMESPACE, diskSubsystem), '1m load average.', labels=['device'])]
     with open('/proc/diskstats', 'r') as f:
         for line in f.readlines():
-            parts = re.split('\s+', line)
+            parts = re.split(r'\s+', line)
             if len(parts) >= 5:
                 dev = parts[3]
                 if re.match(ignored_devies, dev) is None:
