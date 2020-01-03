@@ -10,6 +10,7 @@ jobs:
         with:
           python-version: '3.x'
           architecture: x64
+      - run: python setup.py bdist_wheel
       - name: Publish package
         if: github.event_name == 'push'
         uses: pypa/gh-action-pypi-publish@master
