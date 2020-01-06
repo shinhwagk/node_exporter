@@ -10,6 +10,8 @@ jobs:
         with:
           python-version: '3.x'
           architecture: x64
+      - name: Unit test
+        run: python -m unittest discover tests "test_*.py"
       - run: pip install wheel
       - run: python setup.py bdist_wheel
       - name: Publish package

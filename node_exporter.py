@@ -7,10 +7,11 @@ from prometheus_client.core import REGISTRY
 
 from collector.diskstats import DiskstatsCollector
 from collector.loadavg import LoadavgCollector
+from collector.filesystem import FilesystemCollector
 
 
 REGISTRY.register(DiskstatsCollector())
-ms = [LoadavgCollector()]
+ms = [LoadavgCollector(), FilesystemCollector()]
 
 
 class NodeExporterServer(BaseHTTPRequestHandler):

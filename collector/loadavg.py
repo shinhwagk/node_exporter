@@ -2,6 +2,8 @@ from prometheus_client import Gauge
 
 from collector.namespace import NAMESPACE
 
+def parseLoad(data):
+    return float(data.split(' ')[0])
 
 class LoadavgCollector():
     def __init__(self):
@@ -9,5 +11,5 @@ class LoadavgCollector():
 
     def collect(self):
         with open('/proc/loadavg', 'r') as f:
-            load1_val = f.readline().split(' ')[0]
-        self.m.set(load1_val)
+            load1_val = parseLoad(f.readline())
+        self.m.set(float(load1_val))
