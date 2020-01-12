@@ -28,10 +28,16 @@ def parseFilesystemLabels(fslines):
                                "fsType": l[2], "options": l[3]}, lines))
 
 
-class FilesystemCollector():
+class FilesystemCollectorTest(Gauge):
+    def __init__(self):
+        print(1)
+
+
+class FilesystemCollector(object):
     def __init__(self):
         self.g1 = Gauge(name='size_bytes', subsystem=subsystem, namespace=NAMESPACE,
                         documentation='Filesystem size in bytes.', labelnames=["device", "mountpoint", "fstype"])
+        self.g1
         self.g2 = Gauge(name='free_bytes', subsystem=subsystem, namespace=NAMESPACE,
                         documentation='Filesystem size in bytes.', labelnames=["device", "mountpoint", "fstype"])
         self.g3 = Gauge(name='avail_bytes', subsystem=subsystem, namespace=NAMESPACE,
@@ -42,7 +48,9 @@ class FilesystemCollector():
                         documentation='Filesystem size in bytes.', labelnames=["device", "mountpoint", "fstype"])
 
     def collect(self):
+        self.g1.collect
         for l in parseFilesystemLabels(filesystemLines(filesystemMountPath)):
+            print(l)
             st = os.statvfs(l["mountPoint"])
             self.g1.labels(l["device"], l["mountPoint"],
                            l["fsType"]).set(st.f_bsize * st.f_blocks)

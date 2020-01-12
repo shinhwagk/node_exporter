@@ -3,6 +3,7 @@ import re
 from prometheus_client.core import CounterMetricFamily
 
 from collector.namespace import NAMESPACE
+from collector.collector import Collector
 
 diskSubsystem = "disk"
 
@@ -32,6 +33,7 @@ def collect():
           CounterMetricFamily('{}_{}_io_time_seconds_total'.format(
               NAMESPACE, diskSubsystem), '1m load average.', labels=['device']),
           CounterMetricFamily('{}_{}_io_time_weighted_seconds_total'.format(NAMESPACE, diskSubsystem), '1m load average.', labels=['device'])]
+
     with open('/proc/diskstats', 'r') as f:
         for line in f.readlines():
             parts = re.split(r'\s+', line)
@@ -46,10 +48,11 @@ def collect():
     return ms
 
 
-class DiskstatsCollector(object):
-    def __init__(self):
-        self.ignored_devies = r"^(ram|loop|fd|(h|s|v|xv)d[a-z]|nvme\d+n\d+p)\d+$"
-        self.factors = [1, 1, 1, 0.001, 1, 1, 1, 0.001, 1, 0.001, 0.001]
+class DiskstatsCollector(Collector):
+    name = "diskstats"
+
+    def __init__(self, r):
+        super().__init__(r)
 
     def collect(self):
         for c in collect():

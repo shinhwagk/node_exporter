@@ -3,15 +3,24 @@ import logging
 import os
 
 from prometheus_client import generate_latest
-from prometheus_client.core import REGISTRY
+from prometheus_client.core import REGISTRY, GaugeMetricFamily
 
 from collector.diskstats import DiskstatsCollector
 from collector.loadavg import LoadavgCollector
 from collector.filesystem import FilesystemCollector
+from collector.stat import StatCollector
+from collector.collector import Collector
 
 
-REGISTRY.register(DiskstatsCollector())
-ms = [LoadavgCollector(), FilesystemCollector()]
+__version = '0.1.0'
+
+
+for i in[LoadavgCollector]:
+    if i.name == 'loadavg':
+        i(REGISTRY).register()
+
+
+# collectors = [LoadavgCollector(REGISTRY)]
 
 
 class NodeExporterServer(BaseHTTPRequestHandler):
@@ -19,8 +28,9 @@ class NodeExporterServer(BaseHTTPRequestHandler):
         if self.path == "/metrics":
             logging.info("GET request,\nPath: %s\nHeaders:\n%s\n",
                          str(self.path), str(self.headers))
-            for m in ms:
-                m.collect()
+            # for m in ms:
+            #     m.collect()
+            # lc.collect()
             self.wfile.write(generate_latest())
         else:
             self.wfile.write("""<html>
