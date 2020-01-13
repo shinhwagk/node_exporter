@@ -2,12 +2,15 @@
 	"name": "node_exporter",
 	"context": "..",
 	"dockerFile": "Dockerfile",
-	"settings": { 
+	"settings": {
 		"terminal.integrated.shell.linux": "/bin/bash"
 	},
 	"postCreateCommand": "pip install -r requirements.txt",
 	"appPort": "9100:9100",
 	"extensions": [
 		"ms-python.python"
+	],
+	"mounts": [
+		"source=vscode-extensions,target=/root/.vscode-server/extensions,type=volume"
 	]
 }

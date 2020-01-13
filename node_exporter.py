@@ -15,9 +15,19 @@ from collector.collector import Collector
 __version = '0.1.0'
 
 
-for i in[LoadavgCollector]:
-    if i.name == 'loadavg':
-        i(REGISTRY).register()
+f = FilesystemCollector()
+# # REGISTRY.unregister(f.g5)
+# f.collect()
+# l = LoadavgCollector(REGISTRY)
+# l.register()
+
+# REGISTRY.collect()
+REGISTRY.register(f)
+
+
+# for i in[LoadavgCollector]:
+#     if i.name == 'loadavg':
+#         i(REGISTRY).register()
 
 
 # collectors = [LoadavgCollector(REGISTRY)]
@@ -31,7 +41,8 @@ class NodeExporterServer(BaseHTTPRequestHandler):
             # for m in ms:
             #     m.collect()
             # lc.collect()
-            self.wfile.write(generate_latest())
+            self.wfile.write(generate_latest(
+                REGISTRY.restricted_registry(['node_filesystem_free_bytes'])))
         else:
             self.wfile.write("""<html>
 			<head><title>Node Exporter</title></head>

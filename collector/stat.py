@@ -1,19 +1,16 @@
-from prometheus_client import Gauge
+from prometheus_client.core import GaugeMetricFamily
 
 from collector.namespace import NAMESPACE
 from collector.collector import Collector
-
-# def parseStat(data):
-#     return float(data.split(' ')[0])
 
 
 class StatCollector(Collector):
     name = "stat"
 
+    collectors = [G]
+
     def __init__(self, r):
         super().__init__(r)
-        self.m = Gauge('{}_boot_time_seconds'.format(
-            NAMESPACE), 'Node boot time, in unixtime.')
 
     def collect(self):
         with open('/proc/stat', 'r') as f:
@@ -21,4 +18,5 @@ class StatCollector(Collector):
                 stat_name = line.split(' ')[0]
                 if stat_name == 'btime':
                     stat_value = float(line.split(' ')[1])
-                    self.m.set(stat_value)
+                    GaugeMetricFamily('{}_boot_time_seconds'.format(
+                        NAMESPACE), 'Node boot time, in unixtime.',  value=stat_value))
