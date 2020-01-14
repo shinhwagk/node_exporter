@@ -17,7 +17,6 @@ class Collector(object):
             self.isRegister = True
 
     def unregister(self):
-        print(self.__str__)
         if self.isRegister:
             REGISTRY.unregister(self)
             self.isRegister = False
@@ -28,14 +27,15 @@ class CollectorController:
         self.white = white
         self.black = black
         self._collectors = {}
+        self.initRegister()
 
     def initRegister(self):
-        from collector.diskstats import DiskstatsCollector
-        from collector.loadavg import LoadavgCollector
-        from collector.filesystem import FilesystemCollector
-        from collector.stat import StatCollector
-        from collector.meminfo import MeminfoCollector
-        from collector.cpu import CpuCollector
+        from node_exporter.collector.diskstats import DiskstatsCollector
+        from node_exporter.collector.loadavg import LoadavgCollector
+        from node_exporter.collector.filesystem import FilesystemCollector
+        from node_exporter.collector.stat import StatCollector
+        from node_exporter.collector.meminfo import MeminfoCollector
+        from node_exporter.collector.cpu import CpuCollector
 
         ALLCOLLECTORS = [
             DiskstatsCollector,
@@ -61,3 +61,6 @@ class CollectorController:
         for name in self._collectors.keys():
             if name not in names:
                 self._collectors[name].unregister()
+
+
+CController = CollectorController([], [])

@@ -2,8 +2,8 @@ import re
 
 from prometheus_client.core import GaugeMetricFamily, CounterMetricFamily
 
-from collector.namespace import NAMESPACE
-from collector.collector import Collector
+from .namespace import NAMESPACE
+from .collector import Collector
 
 
 def parseMemInfo(lines):

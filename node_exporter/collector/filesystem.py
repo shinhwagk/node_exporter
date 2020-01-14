@@ -3,8 +3,8 @@ import os
 
 from prometheus_client.core import GaugeMetricFamily
 
-from collector.namespace import NAMESPACE
-from collector.collector import Collector
+from .namespace import NAMESPACE
+from .collector import Collector
 
 
 defIgnoredMountPoints = "^/(dev|proc|sys|var/lib/docker/.+)($|/)"

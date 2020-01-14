@@ -1,7 +1,7 @@
 {
 	"name": "node_exporter",
 	"dockerComposeFile": "docker-compose.yml",
-	"service": "app",
+	"service": "node_exporter",
 	"workspaceFolder": "/workspace",
 	"settings": {
 		"terminal.integrated.shell.linux": "/bin/bash"

@@ -16,6 +16,7 @@ jobs:
         run: python -m unittest discover tests "test_*.py"
       - run: pip install wheel
       - run: python setup.py bdist_wheel
+      - run: python setup.py sdist --formats=gztar
       - name: Publish package
         if: github.event_name == 'push'
         uses: pypa/gh-action-pypi-publish@master

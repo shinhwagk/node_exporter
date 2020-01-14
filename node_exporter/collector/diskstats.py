@@ -2,8 +2,8 @@ import re
 
 from prometheus_client.core import CounterMetricFamily
 
-from collector.namespace import NAMESPACE
-from collector.collector import Collector
+from .namespace import NAMESPACE
+from .collector import Collector
 
 
 ignored_devies = r"^(ram|loop|fd|(h|s|v|xv)d[a-z]|nvme\d+n\d+p)\d+$"
