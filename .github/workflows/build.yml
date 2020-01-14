@@ -29,7 +29,10 @@ jobs:
           password: ${{ secrets.pypi_password }}
       - name: Get the version
         id: get_version
-        run: echo ::set-output name=VERSION::${GITHUB_REF#refs/tags/}
+        run: |
+          VERSION=${GITHUB_REF#refs/tags/}
+          VERSION=${VERSION:1}
+          echo ::set-output name=VERSION::${VERSION}
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
