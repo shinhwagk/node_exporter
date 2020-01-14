@@ -5,55 +5,50 @@ from prometheus_client.core import CounterMetricFamily
 from collector.namespace import NAMESPACE
 from collector.collector import Collector
 
-diskSubsystem = "disk"
-
 
 ignored_devies = r"^(ram|loop|fd|(h|s|v|xv)d[a-z]|nvme\d+n\d+p)\d+$"
 factors = [1, 1, 1, 0.001, 1, 1, 1, 0.001, 1, 0.001, 0.001]
 
 
-def collect():
-    ms = [CounterMetricFamily('{}_{}_reads_completed_total'.format(NAMESPACE, diskSubsystem), documentation='1m load average.', labels=['device']),
+def parseDiskStats(lines, name):
+    ms = [CounterMetricFamily('{}_{}_reads_completed_total'.format(NAMESPACE, name), documentation='1m load average.', labels=['device']),
           CounterMetricFamily('{}_{}_reads_merged_total'.format(
-              NAMESPACE, diskSubsystem), '1m load average.', labels=['device']),
+              NAMESPACE, name), '1m load average.', labels=['device']),
           CounterMetricFamily('{}_{}_read_bytes_total'.format(
-              NAMESPACE, diskSubsystem), '1m load average.', labels=['device']),
+              NAMESPACE, name), '1m load average.', labels=['device']),
           CounterMetricFamily('{}_{}_read_time_seconds_total'.format(
-              NAMESPACE, diskSubsystem), '1m load average.', labels=['device']),
+              NAMESPACE, name), '1m load average.', labels=['device']),
           CounterMetricFamily('{}_{}_writes_completed_total'.format(
-              NAMESPACE, diskSubsystem), '1m load average.', labels=['device']),
+              NAMESPACE, name), '1m load average.', labels=['device']),
           CounterMetricFamily('{}_{}_writes_merged_total'.format(
-              NAMESPACE, diskSubsystem), '1m load average.', labels=['device']),
+              NAMESPACE, name), '1m load average.', labels=['device']),
           CounterMetricFamily('{}_{}_writes_bytes_total'.format(
-              NAMESPACE, diskSubsystem), '1m load average.', labels=['device']),
+              NAMESPACE, name), '1m load average.', labels=['device']),
           CounterMetricFamily('{}_{}_writes_time_seconds_total'.format(
-              NAMESPACE, diskSubsystem), '1m load average.', labels=['device']),
+              NAMESPACE, name), '1m load average.', labels=['device']),
           CounterMetricFamily('{}_{}_io_now'.format(
-              NAMESPACE, diskSubsystem), '1m load average.', labels=['device']),
+              NAMESPACE, name), '1m load average.', labels=['device']),
           CounterMetricFamily('{}_{}_io_time_seconds_total'.format(
-              NAMESPACE, diskSubsystem), '1m load average.', labels=['device']),
-          CounterMetricFamily('{}_{}_io_time_weighted_seconds_total'.format(NAMESPACE, diskSubsystem), '1m load average.', labels=['device'])]
+              NAMESPACE, name), '1m load average.', labels=['device']),
+          CounterMetricFamily('{}_{}_io_time_weighted_seconds_total'.format(NAMESPACE, name), '1m load average.', labels=['device'])]
 
-    with open('/proc/diskstats', 'r') as f:
-        for line in f.readlines():
-            parts = re.split(r'\s+', line)
-            if len(parts) >= 5:
-                dev = parts[3]
-                if re.match(ignored_devies, dev) is None:
-                    stats = parts[4:]
-                    for i, val in enumerate(stats):
-                        if i < len(ms):
-                            value = float(val) * factors[i]
-                            ms[i].add_metric([dev], value)
+    for line in lines:
+        parts = re.split(r'\s+', line)
+        if len(parts) >= 5:
+            dev = parts[3]
+            if re.match(ignored_devies, dev) is None:
+                stats = parts[4:]
+                for i, val in enumerate(stats):
+                    if i < len(ms):
+                        value = float(val) * factors[i]
+                        ms[i].add_metric([dev], value)
     return ms
 
 
 class DiskstatsCollector(Collector):
-    name = "diskstats"
-
-    def __init__(self, r):
-        super().__init__(r)
+    name = "disk"
 
     def collect(self):
-        for c in collect():
-            yield c
+        with open('/proc/diskstats', 'r') as f:
+            for m in parseDiskStats(f, self.name):
+                yield m

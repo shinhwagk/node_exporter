@@ -1,48 +1,21 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
-import logging
 import os
+from sys import argv
 
 from prometheus_client import generate_latest
-from prometheus_client.core import REGISTRY, GaugeMetricFamily
 
-from collector.diskstats import DiskstatsCollector
-from collector.loadavg import LoadavgCollector
-from collector.filesystem import FilesystemCollector
-from collector.stat import StatCollector
-from collector.collector import Collector
+from collector.collector import CollectorController
 
 
-__version = '0.1.0'
-
-
-f = FilesystemCollector()
-# # REGISTRY.unregister(f.g5)
-# f.collect()
-# l = LoadavgCollector(REGISTRY)
-# l.register()
-
-# REGISTRY.collect()
-REGISTRY.register(f)
-
-
-# for i in[LoadavgCollector]:
-#     if i.name == 'loadavg':
-#         i(REGISTRY).register()
-
-
-# collectors = [LoadavgCollector(REGISTRY)]
+__version__ = '0.2.0'
 
 
 class NodeExporterServer(BaseHTTPRequestHandler):
     def do_GET(self):
         if self.path == "/metrics":
-            logging.info("GET request,\nPath: %s\nHeaders:\n%s\n",
-                         str(self.path), str(self.headers))
-            # for m in ms:
-            #     m.collect()
-            # lc.collect()
-            self.wfile.write(generate_latest(
-                REGISTRY.restricted_registry(['node_filesystem_free_bytes'])))
+            print("GET request,\nPath: %s\nHeaders:\n%s\n",
+                  str(self.path), str(self.headers))
+            self.wfile.write(generate_latest())
         else:
             self.wfile.write("""<html>
 			<head><title>Node Exporter</title></head>
@@ -54,21 +27,20 @@ class NodeExporterServer(BaseHTTPRequestHandler):
 
 
 def run(server_class=HTTPServer, handler_class=NodeExporterServer, port=9100):
-    logging.basicConfig(level=logging.INFO)
     server_address = ('', port)
     httpd = server_class(server_address, handler_class)
-    logging.info('Starting node_exporter port{}...\n'.format(port))
+    print('Starting node_exporter port{}...\n'.format(port))
     try:
         httpd.serve_forever()
     except KeyboardInterrupt:
         pass
     httpd.server_close()
-    logging.info('Stopping httpd...\n')
+    lprint('Stopping httpd...\n')
 
 
 if __name__ == '__main__':
-    from sys import argv
-
+    collectorController = CollectorController([], [])
+    collectorController.initRegister()
     if len(argv) == 2:
         run(port=int(argv[1]))
     else:

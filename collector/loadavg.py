@@ -11,9 +11,6 @@ def parseLoad(data):
 class LoadavgCollector(Collector):
     name = "loadavg"
 
-    def __init__(self, r):
-        super().__init__(r)
-
     def collect(self):
         with open('/proc/loadavg', 'r') as f:
             load1_val = parseLoad(f.readline())
