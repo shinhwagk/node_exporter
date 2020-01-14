@@ -1,5 +1,8 @@
 name: Build node_exporter
-on: [push]
+on:
+  push:
+    tags:
+      - "v*"
 
 jobs:
   test:
@@ -23,3 +26,14 @@ jobs:
         with:
           user: ${{ secrets.pypi_username }}
           password: ${{ secrets.pypi_password }}
+      - uses: olegtarasov/get-tag@v1
+        id: tagName
+      - name: Upload Release Asset
+        uses: actions/upload-release-asset@v1.0.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./dist/node_exporter-${{ steps.tagName.outputs.tag }}.tar.gz
+          asset_name: node_exporter-${{ steps.tagName.outputs.tag }}.tar.gz
+          asset_content_type: application/octet-stream
