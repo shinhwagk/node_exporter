@@ -14,4 +14,4 @@ class StatCollector(Collector):
                 if stat_name == 'btime':
                     stat_value = float(line.split(' ')[1])
                     yield GaugeMetricFamily('{}_boot_time_seconds'.format(
-                        NAMESPACE), 'Node boot time, in unixtime.',  value=stat_value)
+                        NAMESPACE), documentation='',  value=stat_value)

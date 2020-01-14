@@ -15,4 +15,4 @@ class LoadavgCollector(Collector):
         with open('/proc/loadavg', 'r') as f:
             load1_val = parseLoad(f.readline())
         yield GaugeMetricFamily(
-            '{}_load1'.format(NAMESPACE), '1m load average.', value=float(load1_val))
+            '{}_load1'.format(NAMESPACE), documentation='', value=float(load1_val))

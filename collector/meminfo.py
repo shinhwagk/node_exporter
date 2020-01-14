@@ -31,8 +31,8 @@ class MeminfoCollector(Collector):
         for k, v in meminfo.items():
             if k.endswith('_total'):
                 m = CounterMetricFamily("{}_{}_{}".format(
-                    NAMESPACE, self.name, k), value=v, documentation="Memory information field {}.".format(k))
+                    NAMESPACE, self.name, k), value=v, documentation="")
             else:
                 m = GaugeMetricFamily("{}_{}_{}".format(
-                    NAMESPACE, self.name, k), value=v, documentation="Memory information field {}.".format(k))
+                    NAMESPACE, self.name, k), value=v, documentation="")
             yield m

@@ -1,0 +1,26 @@
+version: "3"
+
+services:
+  node_exporter:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - TZ=Asia/Shanghai
+    volumes:
+      - ..:/workspace
+      - vscode-extensions:/root/.vscode-server/extensions
+    command: sleep infinity
+  prom:
+    image: prom/prometheus:v2.15.2
+    ports:
+      - "9090:9090"
+    volumes:
+      - ../.devcontainer/prom/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ../.devcontainer/prom/nodes.yml:/etc/prometheus/nodes.yml
+    links:
+      - node_exporter
+
+volumes:
+  vscode-extensions:
+    external: true

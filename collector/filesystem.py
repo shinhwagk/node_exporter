@@ -21,28 +21,35 @@ def parseFilesystemLabels(fslines):
                                "fsType": l[2], "options": l[3]}, lines))
 
 
-def generateFilesystemMetic(name, subsystem, documentation, labels, value):
-    g = GaugeMetricFamily(name="{}_{}_{}".format(NAMESPACE, name, subsystem),
-                          documentation=documentation, labels=["device", "mountpoint", "fstype"])
-    g.add_metric([labels["device"], labels["mountPoint"],
-                  labels["fsType"]], float(value))
-    return g
+def generateFilesystemMetrics(subsystem):
+    return [GaugeMetricFamily(name="{}_{}_{}".format(NAMESPACE, subsystem, 'size_bytes'), labels=["device", "mountpoint", "fstype"], documentation=""),
+            GaugeMetricFamily(name="{}_{}_{}".format(NAMESPACE, subsystem, 'free_bytes'),
+                              labels=["device", "mountpoint", "fstype"], documentation=""),
+            GaugeMetricFamily(name="{}_{}_{}".format(NAMESPACE, subsystem, 'avail_bytes'),
+                              labels=["device", "mountpoint", "fstype"], documentation=""),
+            GaugeMetricFamily(name="{}_{}_{}".format(NAMESPACE, subsystem, 'files'),
+                              labels=["device", "mountpoint", "fstype"], documentation=""),
+            GaugeMetricFamily(name="{}_{}_{}".format(NAMESPACE, subsystem, 'files_free'),
+                              labels=["device", "mountpoint", "fstype"], documentation="")]
 
 
 class FilesystemCollector(Collector):
     name = 'filesystem'
 
     def collect(self):
+        metrics = generateFilesystemMetrics(self.name)
         with open('/proc/1/mounts', 'r') as f:
-            for l in parseFilesystemLabels(f.readlines()):
-                st = os.statvfs(l["mountPoint"])
-                yield generateFilesystemMetic('size_bytes', self.name, '',
-                                              l, st.f_bsize * st.f_blocks)
-                yield generateFilesystemMetic('free_bytes', self.name, '',
-                                              l, st.f_bfree * st.f_blocks)
-                yield generateFilesystemMetic('avail_bytes', self.name, '',
-                                              l, st.f_bsize * st.f_blocks)
-                yield generateFilesystemMetic('files', self.name, '',
-                                              l, st.f_files)
-                yield generateFilesystemMetic('files_free', self.name, '',
-                                              l,  st.f_files * st.f_ffree)
+            for labels in parseFilesystemLabels(f.readlines()):
+                st = os.statvfs(labels["mountPoint"])
+                metrics[0].add_metric([labels["device"], labels["mountPoint"],
+                                       labels["fsType"]], st.f_bsize * st.f_blocks)
+                metrics[1].add_metric([labels["device"], labels["mountPoint"],
+                                       labels["fsType"]], st.f_bfree * st.f_blocks)
+                metrics[2].add_metric([labels["device"], labels["mountPoint"],
+                                       labels["fsType"]], st.f_bsize * st.f_blocks)
+                metrics[3].add_metric([labels["device"], labels["mountPoint"],
+                                       labels["fsType"]],  st.f_files)
+                metrics[4].add_metric([labels["device"], labels["mountPoint"],
+                                       labels["fsType"]],  st.f_files * st.f_ffree)
+        for m in metrics:
+            yield m

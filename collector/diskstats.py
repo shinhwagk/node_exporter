@@ -11,26 +11,26 @@ factors = [1, 1, 1, 0.001, 1, 1, 1, 0.001, 1, 0.001, 0.001]
 
 
 def parseDiskStats(lines, name):
-    ms = [CounterMetricFamily('{}_{}_reads_completed_total'.format(NAMESPACE, name), documentation='1m load average.', labels=['device']),
+    ms = [CounterMetricFamily('{}_{}_reads_completed_total'.format(NAMESPACE, name),  documentation='', labels=['device']),
           CounterMetricFamily('{}_{}_reads_merged_total'.format(
-              NAMESPACE, name), '1m load average.', labels=['device']),
+              NAMESPACE, name), documentation='', labels=['device']),
           CounterMetricFamily('{}_{}_read_bytes_total'.format(
-              NAMESPACE, name), '1m load average.', labels=['device']),
+              NAMESPACE, name), documentation='', labels=['device']),
           CounterMetricFamily('{}_{}_read_time_seconds_total'.format(
-              NAMESPACE, name), '1m load average.', labels=['device']),
+              NAMESPACE, name), documentation='', labels=['device']),
           CounterMetricFamily('{}_{}_writes_completed_total'.format(
-              NAMESPACE, name), '1m load average.', labels=['device']),
+              NAMESPACE, name), documentation='', labels=['device']),
           CounterMetricFamily('{}_{}_writes_merged_total'.format(
-              NAMESPACE, name), '1m load average.', labels=['device']),
+              NAMESPACE, name), documentation='', labels=['device']),
           CounterMetricFamily('{}_{}_writes_bytes_total'.format(
-              NAMESPACE, name), '1m load average.', labels=['device']),
+              NAMESPACE, name), documentation='', labels=['device']),
           CounterMetricFamily('{}_{}_writes_time_seconds_total'.format(
-              NAMESPACE, name), '1m load average.', labels=['device']),
+              NAMESPACE, name), documentation='', labels=['device']),
           CounterMetricFamily('{}_{}_io_now'.format(
-              NAMESPACE, name), '1m load average.', labels=['device']),
+              NAMESPACE, name), documentation='', labels=['device']),
           CounterMetricFamily('{}_{}_io_time_seconds_total'.format(
-              NAMESPACE, name), '1m load average.', labels=['device']),
-          CounterMetricFamily('{}_{}_io_time_weighted_seconds_total'.format(NAMESPACE, name), '1m load average.', labels=['device'])]
+              NAMESPACE, name), documentation='', labels=['device']),
+          CounterMetricFamily('{}_{}_io_time_weighted_seconds_total'.format(NAMESPACE, name), documentation='', labels=['device'])]
 
     for line in lines:
         parts = re.split(r'\s+', line)

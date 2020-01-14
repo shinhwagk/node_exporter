@@ -17,6 +17,7 @@ class Collector(object):
             self.isRegister = True
 
     def unregister(self):
+        print(self.__str__)
         if self.isRegister:
             REGISTRY.unregister(self)
             self.isRegister = False
@@ -47,16 +48,16 @@ class CollectorController:
 
         print('Enabled collectors:')
         for c in ALLCOLLECTORS:
-            i = c()
-            i.register()
-            self._collectors[c.name] = i
+            self._collectors[c.name] = c()
+            self._collectors[c.name].register()
             print("  - {} ".format(c.name))
 
-    def collect(names=[]):
+    def collect(self, names=[]):
         if len(names) == 0:
             for k, v in self._collectors.items():
                 v.register()
         for name in names:
             self._collectors[name].register()
-        for name in set(names).difference(self._collectors.keys()):
-            self._collectors[name].unregister()
+        for name in self._collectors.keys():
+            if name not in names:
+                self._collectors[name].unregister()
