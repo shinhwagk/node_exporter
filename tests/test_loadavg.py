@@ -1,6 +1,6 @@
 import unittest
 
-from collector.loadavg import parseLoad
+from node_exporter.collector.loadavg import parseLoad
 
 
 class Testloadavg(unittest.TestCase):

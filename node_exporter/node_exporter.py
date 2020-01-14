@@ -5,7 +5,7 @@ from urllib.parse import quote_plus, parse_qs, urlparse
 
 from prometheus_client import MetricsHandler, exposition
 
-from .collector.collector import CController
+from .collector.ccontroller import CController
 
 __version__ = '0.3.2'
 
