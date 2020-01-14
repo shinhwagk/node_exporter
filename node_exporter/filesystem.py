@@ -14,7 +14,7 @@ defIgnoredFSTypes = "^(autofs|binfmt_misc|bpf|cgroup2?|configfs|debugfs|devpts|d
 def parseFilesystemLabels(fslines):
     lines = map(lambda l: l.split(' '), fslines)
     lines = filter(lambda l: re.match(
-        defIgnoredFSTypes, l[0]) is None, lines)
+        defIgnoredFSTypes, l[2]) is None, lines)
     lines = filter(lambda l: re.match(
         defIgnoredMountPoints, l[1]) is None, lines)
     return list(map(lambda l: {"device": l[0], "mountPoint": l[1],
@@ -42,11 +42,11 @@ class FilesystemCollector(Collector):
             for labels in parseFilesystemLabels(f.readlines()):
                 st = os.statvfs(labels["mountPoint"])
                 metrics[0].add_metric([labels["device"], labels["mountPoint"],
-                                       labels["fsType"]], st.f_bsize * st.f_blocks)
+                                       labels["fsType"]], float(st.f_blocks * st.f_bsize))
                 metrics[1].add_metric([labels["device"], labels["mountPoint"],
-                                       labels["fsType"]], st.f_bfree * st.f_blocks)
+                                       labels["fsType"]], float(st.f_bfree * st.f_bsize))
                 metrics[2].add_metric([labels["device"], labels["mountPoint"],
-                                       labels["fsType"]], st.f_bsize * st.f_blocks)
+                                       labels["fsType"]], float(st.f_bavail * st.f_bsize))
                 metrics[3].add_metric([labels["device"], labels["mountPoint"],
                                        labels["fsType"]],  st.f_files)
                 metrics[4].add_metric([labels["device"], labels["mountPoint"],

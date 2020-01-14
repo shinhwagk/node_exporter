@@ -6,32 +6,11 @@ from urllib.parse import quote_plus, parse_qs, urlparse
 from prometheus_client import generate_latest, start_http_server, MetricsHandler, exposition
 
 from collector.collector import CollectorController
-import time
 
-__version__ = '0.3.0'
-
-# collectorController = CollectorController([], [])
-# collectorController.initRegister()
-
-# start_http_server(9100)
-# while True:
-#     time.sleep(1)
+__version__ = '0.3.1'
 
 
 class NodeExporterServer(MetricsHandler):
-    # def do_GET(self):
-    #     if self.path == "/metrics":
-    #         print("GET request,\nPath: %s\nHeaders:\n%s\n",
-    #               str(self.path), str(self.headers))
-    #         self.wfile.write(generate_latest())
-    #     else:
-    #         self.wfile.write("""<html>
-        # 		<head><title>Node Exporter</title></head>
-        # 		<body>
-        # 		<h1>Node Exporter</h1>
-        # 		<p><a href="/metrics">Metrics</a></p>
-        # 		</body>
-        # 		</html>""".encode('utf-8'))
 
     def do_GET(self):
         registry = self.registry
