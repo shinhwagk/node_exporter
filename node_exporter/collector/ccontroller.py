@@ -6,12 +6,12 @@ class CollectorController:
         self.initRegister()
 
     def initRegister(self):
-        from node_exporter.collector.diskstats import DiskstatsCollector
-        from node_exporter.collector.loadavg import LoadavgCollector
-        from node_exporter.collector.filesystem import FilesystemCollector
-        from node_exporter.collector.stat import StatCollector
-        from node_exporter.collector.meminfo import MeminfoCollector
-        from node_exporter.collector.cpu import CpuCollector
+        from .diskstats import DiskstatsCollector
+        from .loadavg import LoadavgCollector
+        from .filesystem import FilesystemCollector
+        from .stat import StatCollector
+        from .meminfo import MeminfoCollector
+        from .cpu import CpuCollector
 
         ALLCOLLECTORS = [
             DiskstatsCollector,
